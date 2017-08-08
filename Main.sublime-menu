@@ -1,0 +1,71 @@
+[
+    {
+        "caption": "GameMCU",
+        "mnemonic": "m",
+        "id": "GameMCU",
+        "children":
+        [
+            {
+                "caption": "Console",
+                "id": "gm_console",
+                "command": "gm_panel_show",
+                "args": {
+                    "syntax": "Packages/Lua/Lua.tmLanguage"
+                },
+                "children":
+                [
+                    {
+                        "caption": "Baudrate",
+                        "id": "gm_baudrate",
+                        "children":
+                        [
+                            {
+                                "caption": "115200",
+                                "id": "gm_baudrate_115200",
+                                "checkbox": true,
+                                "command": "gm_baudrate",
+                                "args": {
+                                    "baudrate": 115200
+                                }
+                            },
+                            {
+                                "caption": "921600",
+                                "id": "gm_baudrate_921600",
+                                "checkbox": true,
+                                "command": "gm_baudrate",
+                                "args": {
+                                    "baudrate": 921600
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "caption": "Port",
+                        "id": "gm_serial_port",
+                        "children":
+                        [
+                            {
+                                "caption": "Refresh",
+                                "id": "gm_refresh",
+                                "command": "gm_refresh"
+                            },
+                            {
+                                "caption": "-"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "caption": "Reset Dev",
+                "id": "gm_reset_dev",
+                "command": "gm_reset_dev"
+            },
+            {
+                 "caption": "FirmwareUpdate",
+                 "id": "gm_firmware_update",
+                 "command": "gm_firmware_update"
+            }
+        ]
+    }
+]

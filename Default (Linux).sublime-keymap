@@ -1,0 +1,44 @@
+[
+	{ "keys": ["f1"], "command": "gm_open", "args": {
+        "syntax": "Packages/Lua/Lua.tmLanguage"
+        }
+    },
+	{ "keys": ["up"], "command": "gm_view_previous",
+	"context":
+		[
+			{ "key": "setting.history_arrows", "operator": "equal", "operand": true },
+			{ "key": "setting.gm", "operator": "equal", "operand": true },
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	},
+	{ "keys": ["down"], "command": "gm_view_next",
+	"context":
+		[
+			{ "key": "setting.history_arrows", "operator": "equal", "operand": true },
+			{ "key": "setting.gm", "operator": "equal", "operand": true },
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+	},
+	{ "keys": ["ctrl+l"], "command": "gm_clear",
+	"context":
+		[
+			{ "key": "setting.gm", "operator": "equal", "operand": true }
+		]
+	},
+	{ "keys": ["enter"], "command": "gm_enter", "args": {},
+	"context":
+		[
+			{ "key": "setting.gm", "operator": "equal", "operand": true },
+			{ "key": "setting.auto_complete_commit_on_tab", "operand": true }
+		]
+
+	},
+	{ "keys": ["enter"], "command": "gm_enter", "args": {},
+	"context":
+		[
+			{ "key": "setting.gm", "operator": "equal", "operand": true },
+			{ "key": "auto_complete_visible", "operator": "equal", "operand": false }
+		]
+
+	}
+]

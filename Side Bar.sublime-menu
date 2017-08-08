@@ -1,0 +1,8 @@
+[
+	{"caption": "-"},
+    {
+        "caption": "Upload",
+        "command": "gm_upload",
+        "args": {"files": []} 
+    }
+]
