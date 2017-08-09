@@ -1,17 +1,17 @@
 import sublime
 
-from .. import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
+try:
+    from urllib.parse import urlparse
+    from .sys_path import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
+except Exception as e:
+    from urlparse import urlparse
+    import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
 
 import os
 import json
 import codecs
 import threading
 import zipfile
-try:
-    from urlparse import urlparse
-except Exception as e:
-    from urllib.parse import urlparse
-
 import serial_monitor
 import gm_panel
 import serial
