@@ -7,8 +7,7 @@ from .libs import gm_manager
 manager=gm_manager.GmManager()
 
 def plugin_loaded():
-    print('refresh_serial_port')
-    # manager.refresh_serial_port()
+    manager.refresh_serial_port()
     
 class SublimeGmListener(sublime_plugin.EventListener):
     def on_selection_modified(self, view):

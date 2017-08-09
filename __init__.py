@@ -23,6 +23,8 @@ def gm_dir():
     return SUBLIMEGM_DIR
     
 def gm_user_dir():
+    if not os.path.isdir(SUBLIMEGM_USER_DIR):
+        os.makedirs(SUBLIMEGM_USER_DIR)
     return SUBLIMEGM_USER_DIR
 
 def gm_firmware_dir():
