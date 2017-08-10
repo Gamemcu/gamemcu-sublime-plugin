@@ -3,7 +3,7 @@ import sys
 import os
 from os import path
 
-gm_package_dir = path.dirname(path.dirname(__file__))
+gm_package_dir = path.dirname(path.dirname(path.realpath(__file__)))
 gm_package_name = path.basename(gm_package_dir)
 
 def gm_dir():

@@ -1,12 +1,5 @@
 import sublime
 
-try:
-    from urllib.parse import urlparse
-    from .sys_path import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
-except Exception as e:
-    from urlparse import urlparse
-    import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
-
 import os
 import json
 import codecs
@@ -14,15 +7,30 @@ import threading
 import zipfile
 import serial_monitor
 import gm_panel
-import serial
-from serial.tools.list_ports import comports
 
-from .esptool import esp_set_log, ESPLoader, write_flash, detect_flash_size, flash_size_bytes
-from .task_queue import ActionQueue
+try:
+    #ST3
+    from .sys_path import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
+    from .serial.tools.list_ports import comports
+    from .esptool import esp_set_log, ESPLoader, write_flash, detect_flash_size, flash_size_bytes
+    from .task_queue import ActionQueue
+    from .net.open_compat import open_compat, read_compat
+    from .net.download_manager import downloader
+except Exception as e:
+    #ST2
+    import gm_dir, gm_user_dir, gm_firmware_dir, gm_version_url
+    from serial.tools.list_ports import comports
+    from esptool import esp_set_log, ESPLoader, write_flash, detect_flash_size, flash_size_bytes
+    from task_queue import ActionQueue
+    from net.open_compat import open_compat, read_compat
+    from net.download_manager import downloader
 
-from .net.open_compat import open_compat, read_compat
-from .net.download_manager import downloader
-
+try:
+    #PY3
+    from urllib.parse import urlparse
+except Exception as e:
+    #PY2
+    from urlparse import urlparse
 
 class GmManager(object):
 
@@ -38,10 +46,10 @@ class GmManager(object):
             path = os.path.join(gm_dir(), 'Main.sublime-menu')
             with codecs.open(path, 'r', 'utf-8') as f:
                 self.menu = json.loads(f.read())
+        self.menu[0]["children"][0]["children"][1]["children"][:]=[]
         return self.menu[0]["children"][0]["children"][1]["children"]
 
     def refresh_serial_port(self):
-        self.menu_ports.clear()
         for n, (port, desc, hwid) in enumerate(sorted(comports()), 1):
             print('--- {:2}: {:20} {!r}\n'.format(n, port, desc))
             self.menu_ports.append({

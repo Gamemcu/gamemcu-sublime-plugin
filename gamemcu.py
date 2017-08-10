@@ -2,7 +2,13 @@ import sublime
 import sublime_plugin
 
 import os
-from .libs import gm_manager 
+try:
+    #ST3
+    from .libs import gm_manager 
+except Exception as e:
+    #ST2
+    import gm_manager
+
 
 manager=gm_manager.GmManager()
 
