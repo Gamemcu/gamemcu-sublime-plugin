@@ -45,6 +45,26 @@ class SerialMonitor:
             'touch':self._touch,
         }
 
+    def _ls(self,file):
+        self._command('for k,v in pairs(file.list()) do print(k,v) end')
+
+    def _cat(self,file):
+        try:
+            self._command('=file.open("%s")'%file,rsp='true',echo=False)
+            self._command('=file.read()')
+            self._command('=file.close()',echo=False)
+        except Exception as e:
+            self._msg_queue.put('can`t open this file\n')
+
+    def _rm(self,file):
+        self._command('=file.remove("%s")'%file,echo=False)
+        self._msg_queue.put('\n> ')
+
+    def _touch(self,file):
+        self._command('=file.open("%s","w")'%file,rsp='true',echo=False)
+        self._command('=file.close()',echo=False)
+        self._msg_queue.put('\n> ')
+
     @property
     def is_ready(self):
         return self._is_ready
@@ -73,7 +93,7 @@ class SerialMonitor:
 
     def _ser_init(self):
         self.ser = serial.Serial()
-        self.ser.setDTR(True)
+        self.ser.setDTR(False)
         self.ser.setRTS(False)
         self.ser.port = self._port
         self.ser.baudrate = self._baudrate
@@ -81,17 +101,15 @@ class SerialMonitor:
 
     def reset_dev(self):
         self._msg_queue.put('Reset dev ...\n')
-        self.ser.setDTR(False)
+        self.ser.setRTS(True)  # EN->LOW
+        time.sleep(0.1)
         self.ser.setRTS(False)
-        self.stop()
-        self.start()
-        time.sleep(0.5)
-        self.ser.setDTR(True)
-        self.stop()
-        self.start()
 
     def _check_ready(self):
         try:
+            # RTS would be LOW changed by serial.open() which cause device restart, 
+            # so set DTR be HIGH, avoid device restart, this problem only happen on linux
+            self.ser.setDTR(True)
             self.ser.open()
         except serial.SerialException as e:
             if self._port and self._baudrate:
@@ -102,6 +120,8 @@ class SerialMonitor:
                     raise e
             else:
                 raise e
+        finally:
+            self.ser.setDTR(False)
 
     def start(self, log=True):
         if not self._is_ready and self.ser.port and self.ser.baudrate:
@@ -149,6 +169,7 @@ class SerialMonitor:
             except serial.SerialException as e:
                 self._is_thread_alive=False
                 self._is_ready=False
+                self._port = None
                 self._msg_queue.put(str(e)+'\n')
                 break
             else:
@@ -157,26 +178,6 @@ class SerialMonitor:
             if not self._is_thread_alive:
                 break
             time.sleep(0.01)
-
-    def _ls(self,file):
-        self._command('for k,v in pairs(file.list()) do print(k,v) end')
-
-    def _cat(self,file):
-        try:
-            self._command('=file.open("%s")'%file,rsp='true',echo=False)
-            self._command('=file.read()')
-            self._command('=file.close()',echo=False)
-        except Exception as e:
-            self._msg_queue.put('can`t open this file\n')
-
-    def _rm(self,file):
-        self._command('=file.remove("%s")'%file,echo=False)
-        self._msg_queue.put('\n> ')
-
-    def _touch(self,file):
-        self._command('=file.open("%s","w")'%file,rsp='true',echo=False)
-        self._command('=file.close()',echo=False)
-        self._msg_queue.put('\n> ')
 
     def data2str(self,data):
         data = data.replace(b'\r', b'').replace(b'\r\n', b'\n').replace(b'\x1b',b'')
@@ -211,7 +212,7 @@ class SerialMonitor:
         has_rsp=False
         buf=bytearray()
         packet=''
-        while True:
+        for _ in range(500):
             data=ser.read(ser.in_waiting or 1)
             buf.extend(data)
             if not data or (b'> ' in buf):

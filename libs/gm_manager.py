@@ -46,10 +46,10 @@ class GmManager(object):
             path = os.path.join(gm_dir(), 'Main.sublime-menu')
             with codecs.open(path, 'r', 'utf-8') as f:
                 self.menu = json.loads(f.read())
-        self.menu[0]["children"][0]["children"][1]["children"][:]=[]
         return self.menu[0]["children"][0]["children"][1]["children"]
 
     def refresh_serial_port(self):
+        self.menu_ports.clear()
         for n, (port, desc, hwid) in enumerate(sorted(comports()), 1):
             print('--- {:2}: {:20} {!r}\n'.format(n, port, desc))
             self.menu_ports.append({
@@ -151,7 +151,9 @@ class GmManager(object):
                 detect_flash_size(esp, args)
                 esp.flash_set_parameters(flash_size_bytes(args.flash_size))
             write_flash(esp, args)
-            self.serial_monitor.reset_dev()
+            esp.hard_reset()
+            esp._port.close()
+            self.serial_monitor.start()
         except Exception as e:
             self.panel_writeln(str(e)) 
         finally:

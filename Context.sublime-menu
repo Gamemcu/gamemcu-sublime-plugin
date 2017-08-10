@@ -3,5 +3,9 @@
     {
         "caption": "Upload",
         "command": "gm_upload"
+    },
+    {
+        "caption": "Reset Dev",
+        "command": "gm_reset_dev"
     }
 ]
