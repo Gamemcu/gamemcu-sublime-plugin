@@ -143,7 +143,6 @@ class SerialMonitor:
         if self._is_ready:
             self._is_ready = False
             self._stop_read_thread()
-            self.ser.close()
             if log:
                 self._msg_queue.put('Disconnect Port:"%s"! Press F1 to Connect\n'%self._port)
 
@@ -178,6 +177,8 @@ class SerialMonitor:
             if not self._is_thread_alive:
                 break
             time.sleep(0.01)
+        if not self._is_ready:
+            self.ser.close()
 
     def data2str(self,data):
         data = data.replace(b'\r', b'').replace(b'\r\n', b'\n').replace(b'\x1b',b'')
