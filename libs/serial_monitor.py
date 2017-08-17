@@ -212,10 +212,10 @@ class SerialMonitor:
         has_rsp=False
         buf=bytearray()
         packet=''
-        for _ in range(500):
+        for _ in range(1000):
             data=ser.read(ser.in_waiting or 1)
             buf.extend(data)
-            if not data or (b'> ' in buf):
+            if not data or (b'\n> ' in buf):
                 packet=self.data2str(buf)
                 del buf
                 break;
@@ -233,6 +233,7 @@ class SerialMonitor:
                     filename=os.path.basename(fp)
                     try:
                         self._stop_read_thread()
+                        self._command("file.close()")
                         self._command("=file.open('%s','w')"%filename,'true')
                         line = f.readline()
                         while line != '':
@@ -241,7 +242,7 @@ class SerialMonitor:
                             line = f.readline()
                         self._command("file.flush()")
                         self._command("file.close()")
-                        self._command("dofile('%s')"%filename)
+                        # self._command("dofile('%s')"%filename)
                     except Exception as e:
                         traceback.print_exc()
                         self._msg_queue.put(str(e))
