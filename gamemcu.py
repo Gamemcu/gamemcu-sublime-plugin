@@ -81,7 +81,7 @@ class GmUploadCommand(sublime_plugin.WindowCommand):
                 manager.serial_monitor.upload(f)
         else:
             f=self.window.active_view().file_name()
-            if f.endswith('.lua'):
+            if f.endswith('.lua') or f.endswith('.elua'):
                 manager.serial_monitor.upload(f)
                     
     def is_enabled(self):
@@ -93,7 +93,7 @@ class GmUploadCommand(sublime_plugin.WindowCommand):
     def is_visible(self):
         state=False
         f=self.window.active_view().file_name()
-        if f and f.endswith('.lua'):
+        if f and (f.endswith('.lua') or f.endswith('.elua')):
             state=True
         return state
 

@@ -1,0 +1,22 @@
+%YAML 1.2
+---
+# See http://www.sublimetext.com/docs/3/syntax.html
+file_extensions:
+  - elua
+scope: source.elua
+
+contexts:
+  main:
+    - match: ''
+      push: Packages/Lua/Lua.sublime-syntax
+      with_prototype:
+        - match: \b(EVENT_INPUT|SCH_FOREVER|INPUT_PULLUP|LED_BUILTIN)\b
+          scope: constant.language.elua
+        - match: \b(boolean|word|String|string|array)\b
+          scope: storage.type.elua
+        - match: PROGRAM
+          scope: storage.modifier.elua
+        - match: \b(gm|Stream|Keyboard|Mouse)\b
+          scope: entity.name.class.elua
+        - match: \b(run|remove|create_label|replace_scene|create_action|create_layer|create_scene|create_sprite|create_listener|create_schduler|add|add_schduler|add_listener)\b
+          scope: entity.name.function.elua

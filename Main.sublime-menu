@@ -10,7 +10,7 @@
                 "id": "gm_console",
                 "command": "gm_panel_show",
                 "args": {
-                    "syntax": "Packages/Lua/Lua.tmLanguage"
+                    "syntax": "Packages/Lua/Lua.sublime-syntax"
                 },
                 "children":
                 [
